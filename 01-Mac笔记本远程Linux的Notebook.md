@@ -26,6 +26,7 @@ shift+4 定位到行尾
 o 在当前行的下一行添加内容
 esc 退出编辑模式
 :wq!  保存并退出
+:q 退出
 ```
 
 写入内容：
@@ -41,4 +42,8 @@ c.NotebookApp.notebook_dir = '/data_local/notebook' #  启动路径
 ```
 from notebook.auth import passwd
 passwd()
+```
+
+```
+tail -200 jupyter.log
 ```
