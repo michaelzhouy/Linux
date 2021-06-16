@@ -7,3 +7,4 @@
 7. ps -ef: 显示所有进程
 8. kill -9 PID: 杀死PID进程
 9. tail -200 file1: 显示file1的后200行
+10. cp file1 file2: 将file1复制并重命名为file2
