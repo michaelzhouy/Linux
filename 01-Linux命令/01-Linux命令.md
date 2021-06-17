@@ -8,4 +8,8 @@
 8. kill -9 PID: 杀死PID进程
 9. tail -200 file1: 显示file1的后200行
 10. cp file1 file2: 将file1复制并重命名为file2
-11. top: 显示资源使用情况, q退出
+11. top: 显示资源使用情况, 按q退出
+12. 查看文件大小
+- ls -lht 查看全部文件大小
+- ll -lht 查看文件大小
+- ls -lh file1 查看file1的文件大小
