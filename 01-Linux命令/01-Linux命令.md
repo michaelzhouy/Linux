@@ -15,3 +15,5 @@
 - ls -lh file1 查看file1的文件大小
 - du -sh file1 查看file1的文件大小
 - du -sh * 查看当前目录下, 所有文件大小总和
+13. 解压文件
+unzip -o -d . A_CSV.zip 将A_CSV.zip压缩包解压到当前文件夹下
