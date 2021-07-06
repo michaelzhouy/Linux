@@ -9,12 +9,6 @@
 9. tail -200 file1: 显示file1的后200行
 10. cp file1 file2: 将file1复制并重命名为file2
 11. top: 显示资源使用情况, 按q退出
-12. 查看文件大小
-- ls -lht 查看当前目录下, 每个文件大小, 同时给出当前目录下所有文件大小总和
-- ll -lht 查看文件大小
-- ls -lh file1 查看file1的文件大小
-- du -sh file1 查看file1的文件大小
-- du -sh * 查看当前目录下, 所有文件大小总和
 13. 解压文件
 - unzip -o -d . A_CSV.zip 将A_CSV.zip压缩包解压到当前文件夹下
 14. 7z 解压文件
