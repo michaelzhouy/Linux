@@ -33,10 +33,11 @@ esc 退出编辑模式
 写入内容：
 ```
 c.NotebookApp.ip='*'
-c.NotebookApp.password = u'sha:ce...刚才复制的那个密文'
+c.NotebookApp.password = u'argonxxx'
 c.NotebookApp.open_browser = False
-c.NotebookApp.port = 8887 # 可自行指定一个端口, 访问时使用该端口
+c.NotebookApp.port = 18000 # 可自行指定一个端口, 访问时使用该端口, 后面的那个
 c.NotebookApp.notebook_dir = '/data_local/notebook' #  启动路径
+c.NotebookApp.token = ''
 ```
 	
 密码生成，首先进入ipython
