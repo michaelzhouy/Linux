@@ -50,6 +50,17 @@ passwd()
 tail -200 jupyter.log
 ```
 
+conda list报错
+
+`vim ~/.bashrc`
+
+在末尾添加
+`export PATH=~/anaconda3/bin:$PATH`
+
+重启环境变量
+`source ~/.bashrc`
+
+
 ## ForkLift的使用
 1. 协议：SFTP
 2. 服务器：10.22.20.21
