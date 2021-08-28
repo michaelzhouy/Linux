@@ -16,7 +16,7 @@ nohup jupyter notebook --allow-root > jupyter.log 2>&1 &
 ```
 
 ### linux配置notebook
-1.  jupyter notebook --generate-config --allow-root
+1. jupyter notebook --generate-config --allow-root
 2. 修改配置文件
 ```
 vim ~/.jupyter/jupyter_notebook_config.py
