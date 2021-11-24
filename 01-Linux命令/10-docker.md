@@ -5,6 +5,30 @@ https://blog.csdn.net/qq_32447301/article/details/79387649
 1. 登录
 ```sh
 sudo docker login registry.gz.cvte.cn
+sudo docker pull registry.gz.cvte.cn/dm/eclass_knowledgebasedrec:master # 拉取镜像
+```
+
+### 镜像
+1. 查看镜像
+```sh
+docker images # 查看所有镜像以及其他信息
+docker images -q # 查看所有镜像
+```
+2. 运行
+```sh
+docker images # 查看镜像, 获取镜像id
+docker run -it 45f95ffc1c49 bash # 进入docker, 查看代码
+exit # 退出容器
+docker run -d 45f95ffc1c49 python3 main.py # 运行容器
+docker run -d -p 7533:7533 e98dfefa76fc python3 ./app/interface.py # 后台运行, 指定端口
+docker run -d --name consume -it e98dfefa76fc bash # 后台运行, 指定容器名字
+docker run -d --name consume e98dfefa76fc # 这种是指定好dockerfile后运行
+```
+3. 删除镜像
+```sh
+docker rmi <image id> # 删除指定镜像
+docker rmi $(docker images -q) # 删除所有镜像
+docker rmi -f $(docker images -q) # 强制删除所有镜像
 ```
 
 ### 容器
@@ -12,10 +36,13 @@ sudo docker login registry.gz.cvte.cn
 ```sh
 docker ps -aq # 查看所有容器ID
 docker ps -a # 查看所有容器以及其他信息
+docker ps -q # 查看正在运行的容器
+docker ps -l # 查看最后创建的容器
+docker ps -s # 查看正在运行的容器的大小
 ```
 2. 停止容器(这样才能够删除其中的镜像)
 ```sh
-docker stop <container id> # 停止容器
+docker stop <container id> # 停止容器, 容器状态会变成[Exited(0)]
 docker stop $(docker ps -a -q) # 停止所有的容器
 docker stop $(docker ps -aq) # 停止所有的容器
 ```
@@ -23,7 +50,7 @@ docker stop $(docker ps -aq) # 停止所有的容器
 ```sh
 docker stop <container id> # 停止容器
 docker kill <container id> # kill容器
-docker start <container id> # 启动容器
+docker start <container id> # 启动容器, 容器状态会变成[Up]
 docker restart <container id> # 重启容器
 docker attach id # 重新进去
 ```
@@ -41,23 +68,6 @@ exit # 停止docker
 ctrl + p + q # 不停止docker退出
 ```
 
-### 镜像
-1. 删除镜像
-```sh
-docker images # 查看所有镜像以及其他信息
-docker images -q # 查看所有镜像
-docker rmi <image id> # 删除指定镜像
-docker rmi $(docker images -q) # 删除所有镜像
-docker rmi -f $(docker images -q) # 强制删除所有镜像
-```
-2. 运行
-```sh
-docker images # 查看镜像, 获取镜像id
-docker run -it 45f95ffc1c49 bash # 进入docker
-docker run -d -p 7533:7533 e98dfefa76fc python3 ./app/interface.py # 后台运行, 指定端口
-docker run -d --name consume -it e98dfefa76fc bash # 后台运行, 指定容器名字
-docker run -d --name consume e98dfefa76fc # 这种是指定好dockerfile后运行
-```
 3. docker进入容器, 查看配置文件
 ```sh
 docker exec: 在运行的容器中执行命令
@@ -93,3 +103,8 @@ docker cp 容器名:  容器路径       宿主机路径
 docker cp /home/admin/text.js tomcat：/webapps/js
 docker cp 宿主路径中文件      容器名  容器路径  
 ```
+
+## docker run 与docker exit的区别
+1. 在使用Docker指令时, 有些动作是可以用run或exec来达成的, 那么二者有什么不同呢?
+2. 其实蛮简单的,「docker run」适合在没有Container(容器)可执行的情况下来使用, 通过docker run就可以用来建立, 启动一个Container, 并执行命令;
+3. 想反地, docker exec就是针对已存在的Container进行操作, 如果Container没活着, 那么在执行指令时会出现错误.
