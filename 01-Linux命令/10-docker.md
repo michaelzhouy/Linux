@@ -19,7 +19,7 @@ docker rmi -f $(docker images -q) # 强制删除所有镜像
 ```
 2. 运行容器
 ```sh
-docker run -it <image_id> bash # 进入docker
+docker run -it <image_id> bash # 启动一个bash终端, 允许用户进行交互
 docker run -d -p 7533:7533 e98dfefa76fc python3 ./app/interface.py # 后台运行, 指定端口
 docker run -d --name consume -it e98dfefa76fc bash # 后台运行, 指定容器名字
 docker run -d --name consume e98dfefa76fc # 这种是指定好dockerfile后运行
