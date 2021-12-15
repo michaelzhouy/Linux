@@ -2,7 +2,7 @@
 #### 启动 notebook
 1. iTerm进入服务器
 ```
-sh zy_gpu.sh
+sh 21.sh
 ```
 2. 启动 notebook
 ````
@@ -39,7 +39,7 @@ c.NotebookApp.port = 18000 # 可自行指定一个端口, 访问时使用该端�
 c.NotebookApp.notebook_dir = '/data_local/notebook' #  启动路径
 c.NotebookApp.token = ''
 ```
-	
+
 密码生成，首先进入ipython
 ```
 from notebook.auth import passwd
