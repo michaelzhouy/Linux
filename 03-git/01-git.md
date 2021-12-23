@@ -1,4 +1,23 @@
-## 
+## 配置
+
+1. 初始设置
+
+```sh
+git config --global user.name "michaelzhouy"
+git config --global user.email "15602409303@163.com"
+
+git config --global color.ui auto
+```
+
+2. 生成SSH Key, 一直回车, 生成  `id_rsa` 和 `id_rsa.pub` 两个文件, 在`~/.ssh` 路径下
+   - 复制公钥 `id_rsa.pub` 到GitHub的Setting/SSH and GPG keys里
+
+```sh
+ssh-keygen -t rsa -C "15602409303@163.com"
+```
+
+## git命令
+
 1. 克隆远程项目到本地
 ```sh
 git clone git@github.com:michaelzhouy/time-series-forecasting-with-python.git
