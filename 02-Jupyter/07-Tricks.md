@@ -1,15 +1,25 @@
 ## Notebook
 
-1. 输出多个结果
+1. 导入
 ```python
+# 输出多个结果
 from IPython.core.interactiveshell import InteractiveShell 
 InteractiveShell.ast_node_interactivity = 'all'
-```
-2. 过滤警告
 
-```python
+# 过滤警告
 import warnings
 warnings.filterwarnings('ignore')
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
+# DataFrame显示所有列
+pd.set_option('max_columns', None)
+pd.set_option('max_rows', None)
+```
+2. sub
+
+```python
+# 保存sub
+df[['sid', 'label']].to_csv('../sub/sub_{}_1.csv'.format(time.strftime('%Y%m%d')), index=False)
 ```
 
 3. 代码快捷键
