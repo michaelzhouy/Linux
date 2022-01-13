@@ -5,9 +5,7 @@ import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '6,7'
 ```
 
-
-
-1. 并行
+2. 并行
 
 ```python
 import torch
@@ -15,7 +13,7 @@ model = torch.nn.DataParallel(model)
 model = model.cuda()
 ```
 
-2. 参数
+3. 参数
 
 ```sh
 nohup python3 -u train.py \
@@ -30,4 +28,21 @@ nohup python3 -u train.py \
 --cuda='1,2,3,4' >> swin_base_224_log 2>&1 &
 ```
 
-3. 
+4. 学习率调整
+
+```python
+# 学习率预测
+optimizer = AdamW(model.parameters(), lr=learning_rate)
+num_training_steps = len(train_loader) * epochs
+warm_up_ratio = 0.1
+num_warmup_steps = warm_up_ratio * num_training_steps
+scheduler = get_linear_schedule_with_warmup(
+    optimizer,
+    num_warmup_steps=num_warmup_steps,
+    num_training_steps=num_training_steps
+)
+
+# 余弦退火
+scheduler = CosineAnnealingWarmRestarts(optimizer, T_0=2, T_mult=2, eta_min=1e-5)
+```
+
