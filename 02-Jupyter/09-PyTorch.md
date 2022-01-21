@@ -3,6 +3,8 @@
 ```python
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '6,7'
+
+torch.cuda.empty_cache()
 ```
 
 2. 并行
@@ -31,7 +33,7 @@ nohup python3 -u train.py \
 4. 学习率调整
 
 ```python
-# 学习率预测
+# 学习率预热
 optimizer = AdamW(model.parameters(), lr=learning_rate)
 num_training_steps = len(train_loader) * epochs
 warm_up_ratio = 0.1

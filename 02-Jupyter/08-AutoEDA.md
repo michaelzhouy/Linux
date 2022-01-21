@@ -8,9 +8,7 @@ d = dtale.show(df)
 d.open_browser()
 ```
 
-
-
-1. pandas_profiling
+2. pandas_profiling
 
 - 安装
 
@@ -46,4 +44,3 @@ sep = ';'
 dft = AV.AutoViz(filename="",sep=sep, depVar='Pclass', dfte=df, header=0, verbose=2, 
                  lowess=False, chart_format='png', max_rows_analyzed=150000, max_cols_analyzed=30)
 ```
-

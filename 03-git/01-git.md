@@ -52,3 +52,26 @@ git merge dev_zy  # 将dev_zy分支合并到master分支
 git status  # 查看状态
 git push origin master  # 将改动push到远程master上
 ```
+
+## 删除分支
+
+```sh
+# 删除本地分支
+# 先退出分支
+git checkout master
+# 当一个分支被推送并合并到远程分支后，-d 才会本地删除该分支；如果一个分支还没有被推送或者合并，那么可以使用-D强制删除它
+git branch -d dev_zy
+
+# 删除远程分支
+git push origin --delete dev_zy
+
+# 不显示远程已被删除的分支
+git fetch -p
+```
+
+## 拉取开发分支代码
+
+```sh
+git clone -b dev_zy github地址
+```
+
