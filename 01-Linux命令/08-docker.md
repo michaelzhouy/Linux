@@ -9,7 +9,7 @@ apt-get install tzdata
 
 https://blog.csdn.net/qq_32447301/article/details/79387649
 
-## docker常用命命令
+## docker常用命令
 
 1. 登录
 ```sh
@@ -94,3 +94,30 @@ docker cp 容器名:  容器路径       宿主机路径
 docker cp /home/admin/text.js tomcat：/webapps/js
 docker cp 宿主路径中文件      容器名  容器路径  
 ```
+
+## push自己的镜像
+
+1. 安装docker(Mac安装)
+2. 拉取基础镜像
+
+```sh
+docker pull registry.gz.cvte.cn/cvte-ai/pytorch:cuda10-torch1.4
+```
+
+3. 进入docker, 安装所需要的包
+
+```sh
+docker run -tid --name xxx registry.gz.cvte.cn/cvte-ai/pytorch:cuda10-torch1.4 /bin/bash
+
+pip3 install xx
+```
+
+4. push镜像
+
+```sh
+docker commit -m="add zbar package" -a="xzp" <container id> registry.gz.cvte.cn/dm/pytorch-py3:sc
+
+docker login https://registry.gz.cvte.cn/dm/ # 登陆habor, 输入账号和密码
+docker push registry.gz.cvte.cn/dm/pytorch-py3:sc
+```
+
