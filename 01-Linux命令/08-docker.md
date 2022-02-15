@@ -115,7 +115,7 @@ pip3 install xx
 4. push镜像
 
 ```sh
-docker commit -m="add zbar package" -a="xzp" <container id> registry.gz.cvte.cn/dm/pytorch-py3:sc
+docker commit -m="add zbar package" -a="xzp" <container id> registry.gz.cvte.cn/dm/pytorch-py3:sc # 或者docker tag <container id> registry.gz.cvte.cn/dm/pytorch-py3:sc
 
 docker login https://registry.gz.cvte.cn/dm/ # 登陆habor, 输入账号和密码
 docker push registry.gz.cvte.cn/dm/pytorch-py3:sc
