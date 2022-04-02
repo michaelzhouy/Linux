@@ -59,11 +59,15 @@ git push origin master  # 将改动push到远程master上
 # 删除本地分支
 # 先退出分支
 git checkout master
+
+# 删除本地分支
 # 当一个分支被推送并合并到远程分支后，-d 才会本地删除该分支；如果一个分支还没有被推送或者合并，那么可以使用-D强制删除它
 git branch -d dev_zy
+git branch -D dev_zy # 强制删除
 
 # 删除远程分支
 git push origin --delete dev_zy
+git push origin :dev_zy
 
 # 不显示远程已被删除的分支
 git fetch -p
@@ -73,5 +77,21 @@ git fetch -p
 
 ```sh
 git clone -b dev_zy github地址
+```
+
+## 查看分支
+
+```sh
+# 查看本地和远程仓库的所有分支
+git branch -a
+
+# 查看远程仓库的分支
+git branch -r
+
+# 将本地所有分支和远程保持同步
+git fetch --all
+
+# 拉取所有分支代码
+git pull --all
 ```
 
