@@ -9,3 +9,9 @@
 9. tail -200 file1: 显示file1的后200行
 10. cp file1 file2: 将file1复制并重命名为file2
 11. top: 显示资源使用情况, 按q退出
+12. 不同服务器之间复制文件
+
+```sh
+scp -P 端口号 file root@ip:path
+```
+
