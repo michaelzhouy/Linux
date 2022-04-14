@@ -1,6 +1,13 @@
 1. vim设置行号
-- 单次修改, : set number
-- 一次性修改, 在root路径下, vim ~/.vimrc 插入 set number
+- 单次修改，输入以下命令后按回车键
+```sh
+: set number
+```
+
+- 一次性修改, 在root路径下, vim ~/.vimrc 插入
+```sh
+: set number
+```
 2. i 插入
 3. shift+g 定位最后一行
 4. shift+4 定位到行尾

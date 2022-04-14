@@ -2,6 +2,7 @@
 
 将以下内容添加至hosts中
 ```
+cat /etc/hosts
 vim /etc/hosts
 ```
 
