@@ -24,8 +24,10 @@ kaggle datasets init -p folder/
 # Ctrl+O保存，Ctrl+X退出，如果退出前没有保存会提示Y或N
 nano mydataset/dataset-metadata.json
 
-# -r tar子目录也上传
-kaggle datasets create -p folder/ -r tar
+# -r tar子目录也上传，以.tar的形式
+# -r zip子目录也上传，以文件夹的形式
+# -r skip子目录不上传
+kaggle datasets create -p folder/ -r zip
 
 # dataset version
 kaggle datasets version -p folder/ -m "Updated data" -r tar
