@@ -36,3 +36,21 @@ df[['sid', 'label']].to_csv('../sub/sub_{}_1.csv'.format(time.strftime('%Y%m%d')
 - v - 对选中的cell进行黏贴
 - z - 撤销cell的删除
 
+4. GPU是否可用
+
+```python
+tf.config.list_physical_devices('GPU')
+torch.cuda.is_available()
+
+import sys
+sys.version
+```
+
+5. 指定GPU运行
+
+```sh
+export CUDA_VISIBLE_DEVICES="2"
+nohup python3 -u v3-large-cls.py > log 2>&1 &
+
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+```
