@@ -54,3 +54,28 @@ nohup python3 -u v3-large-cls.py > log 2>&1 &
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 ```
+
+6. 创建路径
+
+```python
+import os
+if not os.path.exists("./outputs"):
+    os.mkdir("./outputs")
+```
+
+7. 生成 requirements.txt
+
+```sh
+# 全部pip包
+pip freeze > requirements.txt
+
+# 当前项目用到的包
+# 安装
+ pip install pipreqs
+ # 在当前目录生成
+ pipreqs . --encoding=utf8 --force
+ 
+ pip install -r requirements.txt
+```
+
+8. 
