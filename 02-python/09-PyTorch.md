@@ -5,6 +5,10 @@ import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '6,7'
 
 torch.cuda.empty_cache()
+
+# run.sh
+export CUDA_VISIBLE_DEVICES="2"
+nohup python3 -u train.py > log 2>&1 &
 ```
 
 2. 并行
