@@ -97,7 +97,7 @@ docker cp 宿主路径中文件      容器名  容器路径
 
 ## push自己的镜像
 
-1. 安装docker(Mac安装)
+1. 安装docker(Mac安装)，后续步骤都是在iterm命令行中运行
 2. 拉取基础镜像
 
 ```sh
@@ -108,8 +108,19 @@ docker pull registry.gz.cvte.cn/cvte-ai/pytorch:cuda10-torch1.4
 
 ```sh
 docker run -tid --name xxx registry.gz.cvte.cn/cvte-ai/pytorch:cuda10-torch1.4 /bin/bash
+# example
+docker run -tid --name sc registry.gz.cvte.cn/cvte-ai/pytorch:cuda10-torch1.4 /bin/bash
+
+# 挂载本地目录（安装chrome driver）
+docker run -tid --name <自定义容器名称> -v /Users/z/Downloads/chromedriver:/usr/local/bin <image id> bash
+
+# 报错：404 Not Found [IP: 185.125.190.36 80]，先执行
+apt update
 
 pip3 install xx
+
+# 退出容器
+exit
 ```
 
 4. push镜像
