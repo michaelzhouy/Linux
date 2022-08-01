@@ -13,7 +13,7 @@ https://blog.csdn.net/qq_32447301/article/details/79387649
 
 1. 登录
 ```sh
-sudo docker login registry.gz.cvte.cn
+sudo docker login xxx
 ```
 
 2. 镜像
