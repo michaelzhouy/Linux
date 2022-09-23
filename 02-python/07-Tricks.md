@@ -42,8 +42,9 @@ df[['sid', 'label']].to_csv('../sub/sub_{}_1.csv'.format(time.strftime('%Y%m%d')
 tf.config.list_physical_devices('GPU')
 torch.cuda.is_available()
 
+# 查看python版本
 import sys
-sys.version
+print(sys.version)
 ```
 
 5. 指定GPU运行
@@ -53,6 +54,8 @@ export CUDA_VISIBLE_DEVICES="2"
 nohup python3 -u v3-large-cls.py > log 2>&1 &
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+
+CUDA_VISIBLE_DEVICES="3" nohup python3 -u train.py > log 2>&1 &
 ```
 
 6. 创建路径

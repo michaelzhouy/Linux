@@ -1,3 +1,33 @@
+## SWA
+
+```python
+# https://pytorch.org/blog/pytorch-1.6-now-includes-stochastic-weight-averaging/#how-to-use-swa-in-pytorch
+from torch.optim.swa_utils import AveragedModel, SWALR
+from torch.optim.lr_scheduler import CosineAnnealingLR
+
+loader, optimizer, model, loss_fn = ...
+swa_model = AveragedModel(model)
+scheduler = CosineAnnealingLR(optimizer, T_max=100)
+swa_start = 5
+swa_scheduler = SWALR(optimizer, swa_lr=0.05)
+
+for epoch in range(100):
+      for input, target in loader:
+          optimizer.zero_grad()
+          loss_fn(model(input), target).backward()
+          optimizer.step()
+      if epoch > swa_start:
+          swa_model.update_parameters(model)
+          swa_scheduler.step()
+      else:
+          scheduler.step()
+
+# Update bn statistics for the swa_model at the end
+torch.optim.swa_utils.update_bn(loader, swa_model)
+# Use swa_model to make predictions on test data 
+preds = swa_model(test_input)
+```
+
 ## FGM
 
 ```python
@@ -35,6 +65,75 @@ for batch_input, batch_label in data:
     loss_adv.backward() 
     fgm.restore()  
 
+    optimizer.step()
+    model.zero_grad()
+```
+
+## PGD
+
+```python
+class PGD():
+    def __init__(self, model):
+        self.model = model
+        self.emb_backup = {}
+        self.grad_backup = {}
+
+    def attack(self, epsilon=1., alpha=0.3, emb_name='emb.', is_first_attack=False):
+        # emb_name这个参数要换成你模型中embedding的参数名
+        for name, param in self.model.named_parameters():
+            if param.requires_grad and emb_name in name:
+                if is_first_attack:
+                    self.emb_backup[name] = param.data.clone()
+                norm = torch.norm(param.grad)
+                if norm != 0 and not torch.isnan(norm):
+                    r_at = alpha * param.grad / norm
+                    param.data.add_(r_at)
+                    param.data = self.project(name, param.data, epsilon)
+
+    def restore(self, emb_name='emb.'):
+        # emb_name这个参数要换成你模型中embedding的参数名
+        for name, param in self.model.named_parameters():
+            if param.requires_grad and emb_name in name: 
+                assert name in self.emb_backup
+                param.data = self.emb_backup[name]
+        self.emb_backup = {}
+
+    def project(self, param_name, param_data, epsilon):
+        r = param_data - self.emb_backup[param_name]
+        if torch.norm(r) > epsilon:
+            r = epsilon * r / torch.norm(r)
+        return self.emb_backup[param_name] + r
+
+    def backup_grad(self):
+        for name, param in self.model.named_parameters():
+            if param.requires_grad:
+                self.grad_backup[name] = param.grad.clone()
+
+    def restore_grad(self):
+        for name, param in self.model.named_parameters():
+            if param.requires_grad:
+                param.grad = self.grad_backup[name]
+```
+
+```python
+pgd = PGD(model)
+K = 3
+for batch_input, batch_label in data:
+    # 正常训练
+    loss = model(batch_input, batch_label)
+    loss.backward() # 反向传播，得到正常的grad
+    pgd.backup_grad()
+    # 对抗训练
+    for t in range(K):
+        pgd.attack(is_first_attack=(t==0)) # 在embedding上添加对抗扰动, first attack时备份param.data
+        if t != K-1:
+            model.zero_grad()
+        else:
+            pgd.restore_grad()
+        loss_adv = model(batch_input, batch_label)
+        loss_adv.backward() # 反向传播，并在正常的grad基础上，累加对抗训练的梯度
+    pgd.restore() # 恢复embedding参数
+    # 梯度下降，更新参数
     optimizer.step()
     model.zero_grad()
 ```
@@ -228,20 +327,91 @@ class AWP:
 def train():
     scaler = torch.cuda.amp.GradScaler()
     awp = AWP(model, optimizer, adv_lr=1, adv_eps=1e-3, start_epoch=1, scaler=scaler)
+    step = 0
     for e in range(epochs):
-        with torch.cuda.amp.autocast():
-            loss, tr_logits = model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
-            loss = loss.mean()
+        for idx, batch in enumerate(train_loader):
+        	with torch.cuda.amp.autocast():
+            	loss, tr_logits = model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
+            	loss = loss.mean()
 
+        	optimizer.zero_grad()
+        	scaler.scale(loss).backward()
+        	if e > 0:
+            	awp.attack_backward(input_ids, labels, attention_mask, e)
+
+        	# gradient clipping
+        	torch.nn.utils.clip_grad_norm_(parameters=model.parameters(), max_norm=10)
+        	scaler.step(optimizer)
+        	scaler.update()
+        	scheduler.step()
+```
+
+## 梯度裁剪
+
+```python
+scaler = GradScaler()
+for epoch in epochs:
+    for input, target in data:
         optimizer.zero_grad()
+        with autocast():
+            output = model(input)
+            loss = loss_fn(output, target)
         scaler.scale(loss).backward()
-        if e > 0:
-            awp.attack_backward(input_ids, labels, attention_mask, e)
+        # 梯度裁剪之前没有恢复
+        scaler.unscale_(optimizer)
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm)
 
-        # gradient clipping
-        torch.nn.utils.clip_grad_norm_(parameters=model.parameters(), max_norm=10)
         scaler.step(optimizer)
         scaler.update()
-        scheduler.step()
+```
+
+## DDP梯度累加
+
+```python
+for epoch in range(epoches):
+    for j, data in enumerate(train_loader):
+        # 前accumulation_steps - 1个step，不进行梯度同步，累积梯度。
+        if accumulation_count % accumulation_steps != 0:
+            with model.no_sync():
+                loss = model(data)
+                loss = loss / accumulation_steps
+                loss.backward()
+        else:
+            loss = model(data)
+            loss = loss / accumulation_steps
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 1)
+            model_optimizer.step()
+            if model_scheduler is not None:
+                model_scheduler.step()
+            model_optimizer.zero_grad()
+         accumulation_count += 1
+
+
+# 优雅的写法（兼容单卡和DDP模式）
+from contextlib import nullcontext
+# 如果python版本小于3.7，则使用下面这个：
+# from contextlib import suppress as nullcontext
+
+if local_rank != -1:
+    model = DDP(model)
+
+accumulation_count = 0
+optimizer.zero_grad()
+for epoch in range(epoches):
+    for i, data in enumerate(train_loader):
+        # 只在DDP模式下，轮数不是accumulation_steps整数倍的时候使用no_sync
+        mcontext = model.no_sync if local_rank != -1 and accumulation_count % accumulation_steps != 0 else nullcontext
+        with mcontext():
+            loss = model(data)
+            loss = loss / accumulation_steps
+            loss.backward()
+        # 轮数为accumulation_steps整数倍的时候，传播梯度，并更新参数
+        if accumulation_count % accumulation_steps == 0:
+            optimizer.step()
+            if model_scheduler is not None:
+                model_scheduler.step()
+            optimizer.zero_grad()
+        accumulation_count += 1
 ```
 

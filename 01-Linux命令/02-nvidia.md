@@ -11,3 +11,9 @@ watch -n 0.5 nvidia-smi
 nvidia-smi -L
 ```
 
+3. 查看显卡频率
+
+```sh
+nvidia-smi dmon
+```
+
