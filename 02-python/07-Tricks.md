@@ -55,7 +55,8 @@ nohup python3 -u v3-large-cls.py > log 2>&1 &
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
-CUDA_VISIBLE_DEVICES="3" nohup python3 -u train.py > log 2>&1 &
+i="0"
+CUDA_VISIBLE_DEVICES=$i nohup python3 -u train.py > log 2>&1 &
 ```
 
 6. 创建路径

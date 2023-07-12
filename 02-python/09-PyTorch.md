@@ -52,3 +52,10 @@ scheduler = get_linear_schedule_with_warmup(
 scheduler = CosineAnnealingWarmRestarts(optimizer, T_0=2, T_mult=2, eta_min=1e-5)
 ```
 
+5. 线程设定
+
+```python
+num_threads = int(cpu_count() / 8)
+torch.set_num_threads(num_threads)
+```
+
