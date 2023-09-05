@@ -1,3 +1,11 @@
+1. 模型缓存路径
+
+```sh
+~/.cache/huggingface/hub/
+```
+
+
+
 1. 不加载模型预训练参数
 
 ```python

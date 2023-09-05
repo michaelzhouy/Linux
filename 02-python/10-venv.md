@@ -23,7 +23,7 @@ deactivate
 ```
 pip3 install -r requirements.txt
 
-pip install -i https://mirrors.aliyun.com/pypi/simple pytorch-lightning==1.4.9 ----no-deps
+pip install -i https://mirrors.aliyun.com/pypi/simple pytorch-lightning==1.4.9 --no-deps
 
 # 安装fairscale出错，加上后面的参数
 pip install -i https://mirrors.aliyun.com/pypi/simple fairscale --no-build-isolation
